@@ -2,18 +2,22 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(stringr)
+library(readr)
 
 ## TODO Read in CSV data
+cData <- read_csv("/Users/mpfammatter/Downloads/cookie delivery breakdown - 279J Ogden.csv")
+cData <- select(cData, -X2)
 
 ## All the cookie colors
 cColors <- c("#ffbe35", "#3AB5E5", "#FF8831", "#862B96", "#FF2D3D", "#45B248", "#653428", "#4FC9BE", "#666666")
 ## provide a name for ggplot to use
-cNames <- c("Savannah\nSmiles", "Trefoils\n", "Do-Si-Dos\n", "Samoas\n", "Tagalongs\n", "Thin Mints\n", "S'mores\n", "Toffee-Tastic\n", "Total Cases\n")
+cNames <- c("Lemon Ups\n", "Trefoils\n", "Do-Si-Dos\n", "Samoas\n", "Tagalongs\n", "Thin Mints\n", "S'mores\n", "Toffee-Tastic\n", "Total Cases\n")
 names(cColors) <- cNames
 
 ## cleanup the troop data
 cData <- cData %>% as_tibble
 names(cData) <- c("Troop", cNames[1:8])
+cData <- cData[1:9] %>% filter(!is.na(Troop))
 
 ## a list of all the troops before we gather the data
 troops <- c(cData$Troop, " ")
@@ -40,9 +44,9 @@ totalCircle <- tibble(Cookie = cNames, x = rep_len(xUnit*5, 9),
 
 ## start a pdf file to accept all of the plots
 ## TODO make the year naming pull from the current year
-pdf("GS Cookie Delivery 2019 By Troop.pdf", width = 8.5, height = 11)
+pdf("GS Cookie Delivery 2020 By Troop.pdf", width = 8.5, height = 11)
 
-## run a loop for each girl
+## run a loop for each troop
 for(troop in troops)
 {
   ## Grab a single girl and provide a location for all the dots
